@@ -1,6 +1,7 @@
 from cProfile import label
 from tkinter import font
 import matplotlib.pyplot as plt
+import matplotlib.style
 import requests  # クローリングモジュール
 from bs4 import BeautifulSoup  # スクレイピングモジュール
 
@@ -30,7 +31,7 @@ for i, content_found in enumerate(soup.find_all('div', class_='content')):
         '\t', '').replace('\n', '').replace('\r', '').replace('（税込み）', '').replace('東北・新潟地区・北陸地区限定', '').replace(
             ',', '').replace('¥', '')]
 
-
+matplotlib.style.use("ggplot")
 # 目盛線を表示
 plt.grid()
 
