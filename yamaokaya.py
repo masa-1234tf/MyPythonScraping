@@ -1,3 +1,4 @@
+import pandas as pd
 from cProfile import label
 from tkinter import font
 import matplotlib.pyplot as plt
@@ -10,15 +11,6 @@ res = requests.get(url)
 html = res.text
 soup = BeautifulSoup(html, 'html.parser')
 
-for i, content_found in enumerate(soup.find_all('div', class_='content')):
-    #name_found_text = name_found.text.replace('\t', '').replace('\n', '').replace('\r', '')
-    name_found_name = content_found.find("dt", class_="name").text.replace(
-        '\t', '').replace('\n', '').replace('\r', '')
-    name_found_price = content_found.find("dd", class_="price").text.replace(
-        '\t', '').replace('\n', '').replace('\r', '').replace('（税込み）', '').replace('東北・新潟地区・北陸地区限定', '').replace(
-            ',', '').replace('¥', '')
-    print("="*30, i+1, "="*30)
-    print(name_found_name, ":", name_found_price)
 
 name = []
 price = []
@@ -47,3 +39,17 @@ plt.xlabel("商品名")
 plt.xticks(fontsize=8)
 plt.ylabel("値段")
 plt.show()
+
+data_list = []
+for content_found in soup.find_all('div', class_='content'):
+    data = {
+        "name": content_found.find("dt", class_="name").text.replace(
+            '\t', '').replace('\n', '').replace('\r', ''),
+        "price": content_found.find("dd", class_="price").text.replace(
+            '\t', '').replace('\n', '').replace('\r', '').replace('（税込み）', '').replace('東北・新潟地区・北陸地区限定', '').replace(
+            ',', '').replace('¥', '')
+    }
+    data_list.append(data)
+data_frame = pd.DataFrame(data_list)
+print(data_frame)
+data_frame.to_csv("yamaokaya_menu.csv", index=None, encoding="utf-8-sig")
